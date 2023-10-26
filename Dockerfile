@@ -6,7 +6,6 @@ RUN apt-get update -y && \
     apt-get install -y python3 python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip --version
 RUN pip install awscli
 RUN aws --version
 
