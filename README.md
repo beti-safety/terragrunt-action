@@ -18,13 +18,12 @@ Supported GitHub action inputs:
 
 Supported environment variables:
 
-| Input Name             | Description                                                                                                  | 
-|:-----------------------|:-------------------------------------------------------------------------------------------------------------|
-| GITHUB_TOKEN           | GitHub token used to add comment to Pull request                                                             |
-| TF_LOG                 | Log level for Terraform                                                                                      |
-| TF_VAR_name            | Define custom variable name as inputs                                                                        |
-| INPUT_PRE_EXEC_number  | Environment variable is utilized to provide custom commands that will be executed before running Terragrunt  |
-| INPUT_POST_EXEC_number | Environment variable is utilized to provide custom commands that will be executed *after* running Terragrunt |
+| Input Name            | Description                                                                                                 | 
+|:----------------------|:------------------------------------------------------------------------------------------------------------|
+| GITHUB_TOKEN          | GitHub token used to add comment to Pull request                                                            |
+| TF_LOG                | Log level for Terraform                                                                                     |
+| TF_VAR_name           | Define custom variable name as inputs                                                                       |
+| INPUT_PRE_EXEC_number | Environment variable is utilized to provide custom commands that will be executed before running Terragrunt |
 
 ## Outputs
 
@@ -45,8 +44,8 @@ on:
   - pull_request
 
 env:
-  tf_version: '1.5.7'
-  tg_version: '0.53.2'
+  tf_version: '1.4.6'
+  tg_version: '0.46.3'
   working_dir: 'project'
 
 jobs:
@@ -57,7 +56,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Check terragrunt HCL
-        uses: gruntwork-io/terragrunt-action@v2
+        uses: gruntwork-io/terragrunt-action@v1
         with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
@@ -72,7 +71,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Plan
-        uses: gruntwork-io/terragrunt-action@v2
+        uses: gruntwork-io/terragrunt-action@v1
         with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
@@ -89,7 +88,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Deploy
-        uses: gruntwork-io/terragrunt-action@v2
+        uses: gruntwork-io/terragrunt-action@v1
         with:
           tf_version: ${{ env.tf_version }}
           tg_version: ${{ env.tg_version }}
@@ -102,7 +101,7 @@ Example of passing custom code before running Terragrunt:
 ```yaml
 ...
 - name: Plan
-  uses: gruntwork-io/terragrunt-action@v2
+  uses: gruntwork-io/terragrunt-action@v1
   env:
     # configure git to use custom token to clone repository.
     INPUT_PRE_EXEC_1: |

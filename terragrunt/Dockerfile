@@ -2,12 +2,6 @@
 # Contains inside TFenv and TGSwitch to allow users to install custom Terraform and Terragrunt versions
 FROM ubuntu:22.04
 MAINTAINER Gruntwork <info@gruntwork.io>
-RUN apt-get update -y && \
-    apt-get install -y python3 python3-pip && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN pip --version
-RUN pip install awscli
 
 ARG TF_ENV_VERSION=v3.0.0
 ARG TGSWITCH_VERSION=0.6.0
@@ -19,17 +13,16 @@ RUN apt-get update && apt-get install -y \
     jq \
     unzip \
     wget \
-    sudo \
     && rm -rf /var/lib/apt/lists/*
 
-# Create runner user
-RUN addgroup --system --gid 127 docker
-RUN useradd --system -u 1001 -g 127 -ms /bin/bash runner
-RUN usermod -aG sudo runner && echo 'runner ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-USER runner
+RUN apt-get update -y && \
+    apt-get install -y python3 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /home/runner/.ssh
-COPY ./known_hosts /home/runner/.ssh/known_hosts
+RUN pip --version
+RUN pip install awscli
+RUN mkdir -p /root/.ssh
+COPY ./known_hosts /root/.ssh/known_hosts
 
 # clone tfenv
 RUN git clone --depth=1 --branch ${TF_ENV_VERSION} https://github.com/tfutils/tfenv.git ~/.tfenv
@@ -42,9 +35,9 @@ RUN tar -xzf /tmp/tgswitch_${TGSWITCH_VERSION}_linux_amd64.tar.gz -C ${HOME}/tgs
 RUN chmod u+x ${HOME}/tgswitch/tgswitch
 RUN rm -rf /tmp/tgswitch_${TGSWITCH_VERSION}_linux_amd64.tar.gz
 
-# Running action as runner user
+# Running action as Root
 # https://docs.github.com/en/actions/creating-actions/dockerfile-support-for-github-actions#user
-ENV PATH="/home/runner/.tfenv/bin:/home/runner/tgswitch:/home/runner/bin:${PATH}"
+ENV PATH="/root/.tfenv/bin:/root/tgswitch:/root/bin:${PATH}"
 
 ENV TF_INPUT=false
 ENV TF_IN_AUTOMATION=1
